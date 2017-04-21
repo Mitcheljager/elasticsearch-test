@@ -13,6 +13,14 @@ class Article < ActiveRecord::Base
             query: query,
             fields: ['title^10', 'text']
           }
+        },
+        highlight: {
+          pre_tags: ['<em>'],
+          post_tags: ['</em>'],
+          fields: {
+            title: {},
+            text: {}
+          }
         }
       }
     )
@@ -20,7 +28,7 @@ class Article < ActiveRecord::Base
 
   settings index: { number_of_shards: 1 } do
     mappings dynamic: 'false' do
-      indexes :title, analyzer: 'english'
+      indexes :title, analyzer: 'english', index_options: 'offsets'
       indexes :text, analyzer: 'english'
     end
   end
